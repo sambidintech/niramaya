@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "517921980288",
+    "project_id": "spotify-delbo",
+    "storage_bucket": "spotify-delbo.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:517921980288:android:b30be1357f8d7f01908b65",
+        "android_client_info": {
+          "package_name": "com.example.spotify_clone"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAjd8L4QWWsNKqrzs4AiMGZBYeuHELE8JA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

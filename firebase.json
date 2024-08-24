@@ -1,0 +1,1 @@
+{"flutter":{"platforms":{"android":{"default":{"projectId":"spotify-delbo","appId":"1:517921980288:android:b30be1357f8d7f01908b65","fileOutput":"android/app/google-services.json"}},"dart":{"lib/firebase_options.dart":{"projectId":"spotify-delbo","configurations":{"android":"1:517921980288:android:b30be1357f8d7f01908b65","ios":"1:517921980288:ios:2030f5678e0c2591908b65"}}}}}}
