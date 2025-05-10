@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:spotify_clone/presentation/book_appointment/book_appointment.dart';
 
 class DoctorListPage extends StatefulWidget {
   @override
@@ -179,7 +180,9 @@ class _DoctorListPageState extends State<DoctorListPage> {
                               width: 95,
                               height: 32,
                               child: ElevatedButton(
-                                onPressed: () {},
+                                onPressed: () {
+                                  Navigator.push(context, MaterialPageRoute(builder: (context)=>BookAppointmentPage()));
+                                },
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor: Color(0xFF007BFF),
                                   foregroundColor: Colors.white,
