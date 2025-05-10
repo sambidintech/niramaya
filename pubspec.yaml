@@ -84,6 +84,7 @@ flutter:
     - assets/vectors/moon.svg
     - assets/vectors/spotify_logo.svg
     - assets/vectors/sun.svg
+    - assets/doctors.json
   fonts:
     - family: Satoshi
       fonts:

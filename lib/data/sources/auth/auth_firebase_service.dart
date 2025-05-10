@@ -16,10 +16,10 @@ class AuthFirebaseServiceImpl extends AuthFirebaseService{
   Future<Either> signIn(SigninUserReq signinUserReq) async {
     try{
 
-     await FirebaseAuth.instance.signInWithEmailAndPassword(
+    final data= await FirebaseAuth.instance.signInWithEmailAndPassword(
           email: signinUserReq.email,
           password: signinUserReq.password);
-
+print(data);
 
       return const Right('Sign In was Successful');
     } on FirebaseAuthException catch(e){
