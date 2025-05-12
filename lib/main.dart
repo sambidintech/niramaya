@@ -10,6 +10,8 @@ import 'package:spotify_clone/presentation/choose_mode/bloc/theme_cubit.dart';
 import 'package:spotify_clone/presentation/pages/splash/splash.dart';
 import 'package:spotify_clone/service_locator.dart';
 
+final RouteObserver<PageRoute> routeObserver = RouteObserver<PageRoute>();
+
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   HydratedBloc.storage = await HydratedStorage.build(
@@ -39,6 +41,7 @@ class MyApp extends StatelessWidget {
           theme: AppTheme.lightTheme,
           darkTheme: AppTheme.darkTheme,
           themeMode: mode,
+          navigatorObservers: [routeObserver],
           debugShowCheckedModeBanner: false,
           home: const SplashPage(),
         ),

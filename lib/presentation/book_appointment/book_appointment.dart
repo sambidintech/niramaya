@@ -2,7 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:intl/intl.dart';
 
+import '../../data/sources/crud_functions/crud_functions.dart';
+
 class BookAppointmentPage extends StatefulWidget {
+  final Map<String, dynamic> doctorData;
+
+  BookAppointmentPage({required this.doctorData});
+
   @override
   _BookAppointmentPageState createState() => _BookAppointmentPageState();
 }
@@ -12,12 +18,8 @@ class _BookAppointmentPageState extends State<BookAppointmentPage> {
   DateTime? _selectedDay;
   String? _selectedTime;
 
-  final List<String> _timeSlots = [
-    '8:00AM', '8:30AM', '9:00AM',
-    '9:30AM', '10:00AM', '10:30AM',
-    '11:00AM', '11:30AM', '12:00AM',
-    '12:30AM', '1:00AM', '1:30AM',
-  ];
+  List<Map<String, dynamic>> get _appointments => List<Map<String, dynamic>>.from(widget.doctorData['appointment']);
+  List<Map<String, dynamic>> get _filledSlots => List<Map<String, dynamic>>.from(widget.doctorData['filled']);
 
   @override
   void initState() {
@@ -25,14 +27,39 @@ class _BookAppointmentPageState extends State<BookAppointmentPage> {
     _selectedDay = DateTime.now();
   }
 
+  List<String> getAvailableTimeSlots(DateTime date) {
+    String formattedDate = DateFormat('yyyy-MM-dd').format(date);
+    print(formattedDate);
+    return _appointments.map((slot) {
+      String time = slot['time'];
+      int total = slot['total_seat'];
+      print("total ${total} time ${time}");
+      int filled = _filledSlots
+          .where((f) => f['date'] == formattedDate && f['time'] == time)
+          .map((f) => f['seats'] as int)
+          .fold(0, (a, b) => a + b);
+      print("filled ${filled}");
+      return filled >= total ? null : time;
+    }).whereType<String>().toList();
+  }
+
+  void bookSlot() async {
+    //updatethefilled data
+    await updateFilledData(widget.doctorData['id'], _selectedDay!, _selectedTime!);
+
+
+    Navigator.pop(context, widget.doctorData); // Return updated data
+  }
+
   @override
   Widget build(BuildContext context) {
-    // App color scheme based on the image
-    final Color backgroundColor = Color(0xFFF5F5F5); // Light grey background
-    final Color cardColor = Colors.white; // White card background
-    final Color primaryColor = Color(0xFF4285F4); // Blue for selected items and button
-    final Color textColor = Colors.black87; // Main text color
-    final Color subtleGreyColor = Color(0xFFEEEEEE); // Light grey for unselected time slots
+    final Color backgroundColor = Color(0xFFF5F5F5);
+    final Color cardColor = Colors.white;
+    final Color primaryColor = Color(0xFF4285F4);
+    final Color textColor = Colors.black87;
+    final Color subtleGreyColor = Color(0xFFEEEEEE);
+
+    List<String> availableSlots = _selectedDay != null ? getAvailableTimeSlots(_selectedDay!) : [];
 
     return Scaffold(
       backgroundColor: backgroundColor,
@@ -42,11 +69,7 @@ class _BookAppointmentPageState extends State<BookAppointmentPage> {
         centerTitle: true,
         title: Text(
           "Book Appointment",
-          style: TextStyle(
-            color: textColor,
-            fontSize: 16,
-            fontWeight: FontWeight.w600,
-          ),
+          style: TextStyle(color: textColor, fontSize: 16, fontWeight: FontWeight.w600),
         ),
         leading: IconButton(
           icon: Icon(Icons.arrow_back, color: textColor),
@@ -54,205 +77,152 @@ class _BookAppointmentPageState extends State<BookAppointmentPage> {
         ),
       ),
       body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                "Select Date",
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w500,
-                  color: textColor,
-                ),
-              ),
-              SizedBox(height: 12),
-              Container(
-                decoration: BoxDecoration(
-                  color: cardColor,
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                padding: const EdgeInsets.all(16),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          DateFormat('MMMM yyyy').format(_focusedDay),
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w500,
+        padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text("Select Date", style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500, color: textColor)),
+            SizedBox(height: 12),
+            Container(
+              decoration: BoxDecoration(color: cardColor, borderRadius: BorderRadius.circular(10)),
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(DateFormat('MMMM yyyy').format(_focusedDay), style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
+                      Row(
+                        children: [
+                          GestureDetector(
+                            onTap: () {
+                              setState(() {
+                                _focusedDay = DateTime(_focusedDay.year, _focusedDay.month - 1);
+                              });
+                            },
+                            child: Icon(Icons.chevron_left, size: 24),
                           ),
-                        ),
-                        Row(
-                          children: [
-                            GestureDetector(
-                              onTap: () {
-                                setState(() {
-                                  _focusedDay = DateTime(
-                                    _focusedDay.year,
-                                    _focusedDay.month - 1,
-                                  );
-                                });
-                              },
-                              child: Icon(Icons.chevron_left, size: 24),
-                            ),
-                            SizedBox(width: 16),
-                            GestureDetector(
-                              onTap: () {
-                                setState(() {
-                                  _focusedDay = DateTime(
-                                    _focusedDay.year,
-                                    _focusedDay.month + 1,
-                                  );
-                                });
-                              },
-                              child: Icon(Icons.chevron_right, size: 24),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: 16),
-                    TableCalendar(
-                      firstDay: DateTime.utc(2021),
-                      lastDay: DateTime.utc(2030),
-                      focusedDay: _focusedDay,
-                      calendarFormat: CalendarFormat.month,
-                      availableCalendarFormats: const {
-                        CalendarFormat.month: 'Month',
-                      },
-                      headerVisible: false,
-                      daysOfWeekHeight: 24,
-                      rowHeight: 36,
-                      selectedDayPredicate: (day) => isSameDay(_selectedDay, day),
-                      onDaySelected: (selectedDay, focusedDay) {
-                        setState(() {
-                          _selectedDay = selectedDay;
-                          _focusedDay = focusedDay;
-                        });
-                      },
-                      calendarStyle: CalendarStyle(
-                        defaultTextStyle: TextStyle(color: textColor),
-                        weekendTextStyle: TextStyle(color: textColor),
-                        selectedDecoration: BoxDecoration(
-                          color: primaryColor,
-                          shape: BoxShape.circle,
-                        ),
-                        todayDecoration: BoxDecoration(
-                          color: Colors.transparent,
-                          shape: BoxShape.circle,
-                          border: Border.all(color: primaryColor, width: 1),
-                        ),
-                        todayTextStyle: TextStyle(color: primaryColor),
-                        outsideDaysVisible: true,
+                          SizedBox(width: 16),
+                          GestureDetector(
+                            onTap: () {
+                              setState(() {
+                                _focusedDay = DateTime(_focusedDay.year, _focusedDay.month + 1);
+                              });
+                            },
+                            child: Icon(Icons.chevron_right, size: 24),
+                          ),
+                        ],
                       ),
-                      daysOfWeekStyle: DaysOfWeekStyle(
-                        weekdayStyle: TextStyle(fontWeight: FontWeight.w500),
-                        weekendStyle: TextStyle(fontWeight: FontWeight.w500),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              SizedBox(height: 16),
-              Text(
-                "Select Time",
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w500,
-                  color: textColor,
-                ),
-              ),
-              SizedBox(height: 12),
-              Container(
-                decoration: BoxDecoration(
-                  color: cardColor,
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                padding: const EdgeInsets.all(16),
-                child: GridView.builder(
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 3,
-                    childAspectRatio: 2.5,
-                    crossAxisSpacing: 10,
-                    mainAxisSpacing: 10,
+                    ],
                   ),
-                  itemCount: _timeSlots.length,
-                  itemBuilder: (context, index) {
-                    final time = _timeSlots[index];
-                    final isSelected = _selectedTime == time;
+                  SizedBox(height: 16),
+                  TableCalendar(
+                    firstDay: DateTime.now(),
+                    lastDay: DateTime.utc(2030),
+                    focusedDay: _focusedDay,
+                    calendarFormat: CalendarFormat.month,
+                    availableCalendarFormats: const {CalendarFormat.month: 'Month'},
+                    headerVisible: false,
+                    daysOfWeekHeight: 24,
+                    rowHeight: 36,
+                    selectedDayPredicate: (day) => isSameDay(_selectedDay, day),
+                    onDaySelected: (selectedDay, focusedDay) {
+                      setState(() {
+                        _selectedDay = selectedDay;
+                        _focusedDay = focusedDay;
+                        _selectedTime = null; // Reset selection on new date
+                      });
+                    },
+                    calendarStyle: CalendarStyle(
+                      defaultTextStyle: TextStyle(color: textColor),
+                      weekendTextStyle: TextStyle(color: textColor),
+                      selectedDecoration: BoxDecoration(color: primaryColor, shape: BoxShape.circle),
+                      todayDecoration: BoxDecoration(
+                        color: Colors.transparent,
+                        shape: BoxShape.circle,
+                        border: Border.all(color: primaryColor, width: 1),
+                      ),
+                      todayTextStyle: TextStyle(color: primaryColor),
+                      outsideDaysVisible: true,
+                    ),
+                    daysOfWeekStyle: DaysOfWeekStyle(
+                      weekdayStyle: TextStyle(fontWeight: FontWeight.w500),
+                      weekendStyle: TextStyle(fontWeight: FontWeight.w500),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            SizedBox(height: 16),
+            Text("Select Time", style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500, color: textColor)),
+            SizedBox(height: 12),
+            Container(
+              decoration: BoxDecoration(color: cardColor, borderRadius: BorderRadius.circular(10)),
+              padding: const EdgeInsets.all(16),
+              child: GridView.builder(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 3,
+                  childAspectRatio: 2.5,
+                  crossAxisSpacing: 10,
+                  mainAxisSpacing: 10,
+                ),
+                itemCount: _appointments.length,
+                itemBuilder: (context, index) {
+                  final time = _appointments[index]['time'];
+                  final isAvailable = availableSlots.contains(time);
+                  final isSelected = _selectedTime == time;
 
-                    return GestureDetector(
-                      onTap: () {
-                        setState(() {
-                          _selectedTime = time;
-                        });
-                      },
-                      child: Container(
-                        decoration: BoxDecoration(
-                          color: isSelected ? primaryColor : subtleGreyColor,
-                          borderRadius: BorderRadius.circular(6),
-                        ),
-                        alignment: Alignment.center,
-                        child: Text(
-                          time,
-                          style: TextStyle(
-                            color: isSelected ? Colors.white : textColor,
-                            fontSize: 13,
-                            fontWeight: FontWeight.w500,
-                          ),
+                  return GestureDetector(
+                    onTap: isAvailable
+                        ? () {
+                      setState(() {
+                        _selectedTime = time;
+                      });
+                    }
+                        : null,
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: isSelected
+                            ? primaryColor
+                            : isAvailable
+                            ? subtleGreyColor
+                            : Colors.grey[300],
+                        borderRadius: BorderRadius.circular(6),
+                      ),
+                      alignment: Alignment.center,
+                      child: Text(
+                        time,
+                        style: TextStyle(
+                          color: isAvailable ? (isSelected ? Colors.white : textColor) : Colors.grey,
+                          fontSize: 13,
+                          fontWeight: FontWeight.w500,
                         ),
                       ),
-                    );
-                  },
-                ),
-              ),
-              SizedBox(height: 24),
-              SizedBox(
-                width: double.infinity,
-                height: 48,
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: primaryColor,
-                    foregroundColor: Colors.white,
-                    elevation: 0,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
                     ),
-                  ),
-                  onPressed: (_selectedDay != null && _selectedTime != null)
-                      ? () {
-                    // Save appointment
-                    print("Selected Date: $_selectedDay");
-                    print("Selected Time: $_selectedTime");
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text(
-                          "Appointment set for $_selectedDay at $_selectedTime",
-                        ),
-                      ),
-                    );
-                    Navigator.pop(context);
-                  }
-                      : null,
-                  child: Text(
-                    "Set appointment",
-                    style: TextStyle(
-                      fontSize: 15,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                ),
+                  );
+                },
               ),
-              SizedBox(height: 24),
-            ],
-          ),
+            ),
+            SizedBox(height: 24),
+            SizedBox(
+              width: double.infinity,
+              height: 48,
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: primaryColor,
+                  foregroundColor: Colors.white,
+                  elevation: 0,
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                ),
+                onPressed: (_selectedDay != null && _selectedTime != null) ? bookSlot : null,
+                child: Text("Set appointment", style: TextStyle(fontSize: 15, fontWeight: FontWeight.w500)),
+              ),
+            ),
+            SizedBox(height: 24),
+          ],
         ),
       ),
     );

@@ -1,28 +1,62 @@
-import 'dart:convert';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:spotify_clone/presentation/book_appointment/book_appointment.dart';
+import '../../../main.dart'; // Make sure routeObserver is accessible
 
 class DoctorListPage extends StatefulWidget {
   @override
   _DoctorListPageState createState() => _DoctorListPageState();
 }
 
-class _DoctorListPageState extends State<DoctorListPage> {
+class _DoctorListPageState extends State<DoctorListPage> with RouteAware {
   List doctors = [];
+  bool isLoading = true;
 
   @override
   void initState() {
     super.initState();
-    loadDoctors();
+    fetchDoctorsFromFirestore();
   }
 
-  Future<void> loadDoctors() async {
-    final String response = await rootBundle.loadString('assets/doctors.json');
-    final data = await json.decode(response);
-    setState(() {
-      doctors = data;
-    });
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    routeObserver.subscribe(this, ModalRoute.of(context)! as PageRoute);
+  }
+
+  @override
+  void dispose() {
+    routeObserver.unsubscribe(this);
+    super.dispose();
+  }
+
+  @override
+  void didPopNext() {
+    // Called when coming back to this page
+    fetchDoctorsFromFirestore();
+  }
+
+  Future<void> fetchDoctorsFromFirestore() async {
+    setState(() => isLoading = true);
+    try {
+      final snapshot =
+      await FirebaseFirestore.instance.collection('doctor-data').get();
+
+      final fetchedDoctors = snapshot.docs.map((doc) {
+        final data = doc.data();
+        data['id'] = doc.id;
+        data.remove('rating'); // Optional
+        return data;
+      }).toList();
+
+      setState(() {
+        doctors = fetchedDoctors;
+        isLoading = false;
+      });
+    } catch (e) {
+      print('Error fetching doctors: $e');
+      setState(() => isLoading = false);
+    }
   }
 
   @override
@@ -34,7 +68,7 @@ class _DoctorListPageState extends State<DoctorListPage> {
         elevation: 0,
         leading: IconButton(
           icon: Icon(Icons.arrow_back, color: Colors.black, size: 22),
-          onPressed: () {},
+          onPressed: () => Navigator.pop(context),
         ),
         centerTitle: true,
         title: Text(
@@ -46,14 +80,13 @@ class _DoctorListPageState extends State<DoctorListPage> {
           ),
         ),
       ),
-      body: doctors.isEmpty
+      body: isLoading
           ? Center(child: CircularProgressIndicator())
           : ListView.builder(
         padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         itemCount: doctors.length,
         itemBuilder: (context, index) {
           final doctor = doctors[index];
-
           return Container(
             margin: EdgeInsets.only(bottom: 12),
             decoration: BoxDecoration(
@@ -72,7 +105,6 @@ class _DoctorListPageState extends State<DoctorListPage> {
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  // Doctor Image
                   ClipRRect(
                     borderRadius: BorderRadius.circular(10),
                     child: Image.network(
@@ -85,13 +117,13 @@ class _DoctorListPageState extends State<DoctorListPage> {
                           width: 65,
                           height: 65,
                           color: Colors.grey[300],
-                          child: Icon(Icons.person, color: Colors.grey[500]),
+                          child:
+                          Icon(Icons.person, color: Colors.grey[500]),
                         );
                       },
                     ),
                   ),
                   SizedBox(width: 12),
-                  // Doctor Info
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -107,9 +139,9 @@ class _DoctorListPageState extends State<DoctorListPage> {
                         SizedBox(height: 4),
                         Row(
                           children: [
-                            // Rating
                             Container(
-                              padding: EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 6, vertical: 2),
                               decoration: BoxDecoration(
                                 color: Colors.blue[50],
                                 borderRadius: BorderRadius.circular(4),
@@ -123,7 +155,7 @@ class _DoctorListPageState extends State<DoctorListPage> {
                                   ),
                                   SizedBox(width: 4),
                                   Text(
-                                    "${doctor['rating']}%",
+                                    "${doctor['status'].toUpperCase()}",
                                     style: TextStyle(
                                       fontSize: 11,
                                       fontWeight: FontWeight.w500,
@@ -134,9 +166,9 @@ class _DoctorListPageState extends State<DoctorListPage> {
                               ),
                             ),
                             SizedBox(width: 15),
-                            // Experience
                             Container(
-                              padding: EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 6, vertical: 2),
                               decoration: BoxDecoration(
                                 color: Colors.blue[50],
                                 borderRadius: BorderRadius.circular(4),
@@ -175,20 +207,38 @@ class _DoctorListPageState extends State<DoctorListPage> {
                                 ),
                               ),
                             ),
-                            // Appointment Button
                             Container(
                               width: 95,
                               height: 32,
                               child: ElevatedButton(
                                 onPressed: () {
-                                  Navigator.push(context, MaterialPageRoute(builder: (context)=>BookAppointmentPage()));
+                                  if (doctor['status']
+                                      .toUpperCase() ==
+                                      "ONLINE") {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (_) => BookAppointmentPage(
+                                            doctorData: doctor),
+                                      ),
+                                    ).then((updatedData) {
+                                      if (updatedData != null) {
+                                        // Optionally handle update
+                                      }
+                                    });
+                                  }
                                 },
                                 style: ElevatedButton.styleFrom(
-                                  backgroundColor: Color(0xFF007BFF),
+                                  backgroundColor: doctor['status']
+                                      .toUpperCase() ==
+                                      "ONLINE"
+                                      ? Color(0xFF007BFF)
+                                      : Colors.grey.withOpacity(0.5),
                                   foregroundColor: Colors.white,
                                   elevation: 0,
                                   shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(8),
+                                    borderRadius:
+                                    BorderRadius.circular(8),
                                   ),
                                   padding: EdgeInsets.zero,
                                 ),
