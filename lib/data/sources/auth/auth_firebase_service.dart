@@ -3,7 +3,7 @@ import 'package:dartz/dartz.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:spotify_clone/data/models/auth/create_user_req.dart';
 import 'package:spotify_clone/data/models/auth/signin_user_req.dart';
-
+import 'package:shared_preferences/shared_preferences.dart';
 abstract class AuthFirebaseService{
 
   Future<Either> signup(CreateUserReq createUserReq);
@@ -19,7 +19,11 @@ class AuthFirebaseServiceImpl extends AuthFirebaseService{
     final data= await FirebaseAuth.instance.signInWithEmailAndPassword(
           email: signinUserReq.email,
           password: signinUserReq.password);
-print(data);
+
+    String uid = data.user?.uid ?? '';
+    // Save to SharedPreferences
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('user_uid', uid);
 
       return const Right('Sign In was Successful');
     } on FirebaseAuthException catch(e){

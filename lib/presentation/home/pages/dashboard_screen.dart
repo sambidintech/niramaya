@@ -1,7 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:spotify_clone/presentation/book_appointment/book_appointment.dart';
-import '../../../main.dart'; // Make sure routeObserver is accessible
+import '../../../main.dart';
+import '../../auth/pages/signup_or_signin.dart'; // Make sure routeObserver is accessible
 
 class DoctorListPage extends StatefulWidget {
   @override
@@ -63,13 +64,26 @@ class _DoctorListPageState extends State<DoctorListPage> with RouteAware {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Color(0xFFF6F6F6),
+      drawer: Drawer(
+        elevation: 0,
+        child: ListView(
+          children: [
+            ListTile(
+              title: const Text('Log Out'),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const SignupOrSignInPage()),
+                );
+              },
+            )
+          ],
+        ),
+      ),
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 0,
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: Colors.black, size: 22),
-          onPressed: () => Navigator.pop(context),
-        ),
+
         centerTitle: true,
         title: Text(
           'Famous doctors for you',
