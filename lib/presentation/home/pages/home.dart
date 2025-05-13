@@ -53,7 +53,7 @@ class _HomePageState extends State<HomePage> {
             label: 'Dashboard',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.timer),
+            icon: Icon(Icons.receipt_long),
             label: 'Appointments',
           ),
         ],

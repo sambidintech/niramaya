@@ -231,7 +231,8 @@ class _UserAppointmentsPageState extends State<UserAppointmentsPage> with RouteA
                           ),
                         ),
                         SizedBox(height: 16),
-                        SizedBox(
+                        Container(
+
                           width: 130,
                           height: 32,
                           child: ElevatedButton(
@@ -249,7 +250,7 @@ class _UserAppointmentsPageState extends State<UserAppointmentsPage> with RouteA
                               ),
                             ),
                             child: Text(
-                              'Delete Appointment',
+                              'Delete',
                               style: TextStyle(
                                 fontSize: 12,
                                 fontWeight: FontWeight.w500,

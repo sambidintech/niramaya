@@ -25,9 +25,10 @@ Future<void> main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
   await initializeDependencies();
-  await deleteAllDocumentsFromCollection("patient-apt-data");
-  await deleteAllDocumentsFromCollection("doctor-data");
-  await uploadDoctorsAndExportJson();
+  // run below lines to remove all data and add data from doctors.json
+  // await deleteAllDocumentsFromCollection("patient-apt-data");
+  // await deleteAllDocumentsFromCollection("doctor-data");
+  // await uploadDoctorsAndExportJson();
 
   runApp(const MyApp());
 }
