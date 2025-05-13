@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:spotify_clone/presentation/auth/pages/signup_or_signin.dart';
+import 'package:spotify_clone/presentation/home/pages/user_appointments.dart';
 import 'package:spotify_clone/presentation/song/page/song_page.dart';
 
 import 'dashboard_screen.dart';
@@ -31,7 +32,7 @@ class _HomePageState extends State<HomePage> {
   int _selectedIndex = 0;
   final List<Widget> _pages = [
      DoctorListPage(),
-    const MeditationHomePage(),
+     UserAppointmentsPage(),
   ];
 
   void _onItemTapped(int index) {
@@ -53,7 +54,7 @@ class _HomePageState extends State<HomePage> {
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.timer),
-            label: 'Meditate',
+            label: 'Appointments',
           ),
         ],
         currentIndex: _selectedIndex,

@@ -10,6 +10,8 @@ import 'package:spotify_clone/presentation/choose_mode/bloc/theme_cubit.dart';
 import 'package:spotify_clone/presentation/pages/splash/splash.dart';
 import 'package:spotify_clone/service_locator.dart';
 
+import 'data/sources/crud_functions/crud_functions.dart';
+
 final RouteObserver<PageRoute> routeObserver = RouteObserver<PageRoute>();
 
 Future<void> main() async {
@@ -23,6 +25,10 @@ Future<void> main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
   await initializeDependencies();
+  await deleteAllDocumentsFromCollection("patient-apt-data");
+  await deleteAllDocumentsFromCollection("doctor-data");
+  await uploadDoctorsAndExportJson();
+
   runApp(const MyApp());
 }
 

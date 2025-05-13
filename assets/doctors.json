@@ -23,7 +23,7 @@
     "cost": 200,
     "image": "https://randomuser.me/api/portraits/men/22.jpg",
     "qualification": "MBBS",
-    "status": "offline",
+    "status": "online",
     "appointment": [
       { "time": "09:00 AM", "total_seat": 5 },
       { "time": "01:00 PM", "total_seat": 5 }
@@ -57,7 +57,7 @@
     "cost": 200,
     "image": "https://randomuser.me/api/portraits/men/22.jpg",
     "qualification": "MBBS",
-    "status": "offline",
+    "status": "online",
     "appointment": [
       { "time": "09:00 AM", "total_seat": 5 },
       { "time": "01:00 PM", "total_seat": 5 }
@@ -74,7 +74,7 @@
     "cost": 200,
     "image": "https://randomuser.me/api/portraits/men/22.jpg",
     "qualification": "MBBS",
-    "status": "offline",
+    "status": "online",
     "appointment": [
       { "time": "09:00 AM", "total_seat": 5 },
       { "time": "01:00 PM", "total_seat": 5 }
