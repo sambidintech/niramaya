@@ -19,10 +19,9 @@ class AuthFirebaseServiceImpl extends AuthFirebaseService{
     final data= await FirebaseAuth.instance.signInWithEmailAndPassword(
           email: signinUserReq.email,
           password: signinUserReq.password);
-  print(data);
     String uid = data.user?.uid ?? '';
     // Save to SharedPreferences
-    final storage = FlutterSecureStorage();
+    const storage = FlutterSecureStorage();
 
     await storage.write(key: 'user_uid', value: uid);
 
@@ -49,7 +48,11 @@ class AuthFirebaseServiceImpl extends AuthFirebaseService{
       var data = await FirebaseAuth.instance.createUserWithEmailAndPassword(
           email: createUserReq.email,
           password: createUserReq.password);
+      String uid = data.user?.uid ?? '';
+      // Save to SharedPreferences
+      const storage = FlutterSecureStorage();
 
+      await storage.write(key: 'user_uid', value: uid);
       FirebaseFirestore.instance.collection('Users').add(
           {
             'name': data.user?.displayName,
