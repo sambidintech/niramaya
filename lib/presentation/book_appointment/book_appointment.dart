@@ -7,7 +7,7 @@ import '../../data/sources/crud_functions/crud_functions.dart';
 class BookAppointmentPage extends StatefulWidget {
   final Map<String, dynamic> doctorData;
 
-  BookAppointmentPage({required this.doctorData});
+  const BookAppointmentPage({super.key, required this.doctorData});
 
   @override
   _BookAppointmentPageState createState() => _BookAppointmentPageState();
@@ -33,12 +33,12 @@ class _BookAppointmentPageState extends State<BookAppointmentPage> {
     return _appointments.map((slot) {
       String time = slot['time'];
       int total = slot['total_seat'];
-      print("total ${total} time ${time}");
+      print("total $total time $time");
       int filled = _filledSlots
           .where((f) => f['date'] == formattedDate && f['time'] == time)
           .map((f) => f['seats'] as int)
           .fold(0, (a, b) => a + b);
-      print("filled ${filled}");
+      print("filled $filled");
       return filled >= total ? null : time;
     }).whereType<String>().toList();
   }
@@ -53,11 +53,11 @@ class _BookAppointmentPageState extends State<BookAppointmentPage> {
 
   @override
   Widget build(BuildContext context) {
-    final Color backgroundColor = Color(0xFFF5F5F5);
-    final Color cardColor = Colors.white;
-    final Color primaryColor = Color(0xFF4285F4);
-    final Color textColor = Colors.black87;
-    final Color subtleGreyColor = Color(0xFFEEEEEE);
+    const Color backgroundColor = Color(0xFFF5F5F5);
+    const Color cardColor = Colors.white;
+    const Color primaryColor = Color(0xFF4285F4);
+    const Color textColor = Colors.black87;
+    const Color subtleGreyColor = Color(0xFFEEEEEE);
 
     List<String> availableSlots = _selectedDay != null ? getAvailableTimeSlots(_selectedDay!) : [];
 
@@ -67,12 +67,12 @@ class _BookAppointmentPageState extends State<BookAppointmentPage> {
         backgroundColor: Colors.white,
         elevation: 0,
         centerTitle: true,
-        title: Text(
+        title: const Text(
           "Book Appointment",
           style: TextStyle(color: textColor, fontSize: 16, fontWeight: FontWeight.w600),
         ),
         leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: textColor),
+          icon: const Icon(Icons.arrow_back, color: textColor),
           onPressed: () => Navigator.of(context).pop(),
         ),
       ),
@@ -81,8 +81,8 @@ class _BookAppointmentPageState extends State<BookAppointmentPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text("Select Date", style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500, color: textColor)),
-            SizedBox(height: 12),
+            const Text("Select Date", style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500, color: textColor)),
+            const SizedBox(height: 12),
             Container(
               decoration: BoxDecoration(color: cardColor, borderRadius: BorderRadius.circular(10)),
               padding: const EdgeInsets.all(16),
@@ -92,7 +92,7 @@ class _BookAppointmentPageState extends State<BookAppointmentPage> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(DateFormat('MMMM yyyy').format(_focusedDay), style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
+                      Text(DateFormat('MMMM yyyy').format(_focusedDay), style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
                       Row(
                         children: [
                           GestureDetector(
@@ -101,22 +101,22 @@ class _BookAppointmentPageState extends State<BookAppointmentPage> {
                                 _focusedDay = DateTime(_focusedDay.year, _focusedDay.month - 1);
                               });
                             },
-                            child: Icon(Icons.chevron_left, size: 24),
+                            child: const Icon(Icons.chevron_left, size: 24),
                           ),
-                          SizedBox(width: 16),
+                          const SizedBox(width: 16),
                           GestureDetector(
                             onTap: () {
                               setState(() {
                                 _focusedDay = DateTime(_focusedDay.year, _focusedDay.month + 1);
                               });
                             },
-                            child: Icon(Icons.chevron_right, size: 24),
+                            child: const Icon(Icons.chevron_right, size: 24),
                           ),
                         ],
                       ),
                     ],
                   ),
-                  SizedBox(height: 16),
+                  const SizedBox(height: 16),
                   TableCalendar(
                     firstDay: DateTime.now(),
                     lastDay: DateTime.utc(2030),
@@ -135,18 +135,18 @@ class _BookAppointmentPageState extends State<BookAppointmentPage> {
                       });
                     },
                     calendarStyle: CalendarStyle(
-                      defaultTextStyle: TextStyle(color: textColor),
-                      weekendTextStyle: TextStyle(color: textColor),
-                      selectedDecoration: BoxDecoration(color: primaryColor, shape: BoxShape.circle),
+                      defaultTextStyle: const TextStyle(color: textColor),
+                      weekendTextStyle: const TextStyle(color: textColor),
+                      selectedDecoration: const BoxDecoration(color: primaryColor, shape: BoxShape.circle),
                       todayDecoration: BoxDecoration(
                         color: Colors.transparent,
                         shape: BoxShape.circle,
                         border: Border.all(color: primaryColor, width: 1),
                       ),
-                      todayTextStyle: TextStyle(color: primaryColor),
+                      todayTextStyle: const TextStyle(color: primaryColor),
                       outsideDaysVisible: true,
                     ),
-                    daysOfWeekStyle: DaysOfWeekStyle(
+                    daysOfWeekStyle: const DaysOfWeekStyle(
                       weekdayStyle: TextStyle(fontWeight: FontWeight.w500),
                       weekendStyle: TextStyle(fontWeight: FontWeight.w500),
                     ),
@@ -154,9 +154,9 @@ class _BookAppointmentPageState extends State<BookAppointmentPage> {
                 ],
               ),
             ),
-            SizedBox(height: 16),
-            Text("Select Time", style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500, color: textColor)),
-            SizedBox(height: 12),
+            const SizedBox(height: 16),
+            const Text("Select Time", style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500, color: textColor)),
+            const SizedBox(height: 12),
             Container(
               decoration: BoxDecoration(color: cardColor, borderRadius: BorderRadius.circular(10)),
               padding: const EdgeInsets.all(16),
@@ -206,7 +206,7 @@ class _BookAppointmentPageState extends State<BookAppointmentPage> {
                 },
               ),
             ),
-            SizedBox(height: 24),
+            const SizedBox(height: 24),
             SizedBox(
               width: double.infinity,
               height: 48,
@@ -218,10 +218,10 @@ class _BookAppointmentPageState extends State<BookAppointmentPage> {
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
                 ),
                 onPressed: (_selectedDay != null && _selectedTime != null) ? bookSlot : null,
-                child: Text("Set appointment", style: TextStyle(fontSize: 15, fontWeight: FontWeight.w500)),
+                child: const Text("Set appointment", style: TextStyle(fontSize: 15, fontWeight: FontWeight.w500)),
               ),
             ),
-            SizedBox(height: 24),
+            const SizedBox(height: 24),
           ],
         ),
       ),

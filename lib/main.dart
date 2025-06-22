@@ -10,7 +10,6 @@ import 'package:spotify_clone/presentation/choose_mode/bloc/theme_cubit.dart';
 import 'package:spotify_clone/presentation/pages/splash/splash.dart';
 import 'package:spotify_clone/service_locator.dart';
 
-import 'data/sources/crud_functions/crud_functions.dart';
 
 final RouteObserver<PageRoute> routeObserver = RouteObserver<PageRoute>();
 

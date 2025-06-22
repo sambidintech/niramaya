@@ -8,8 +8,7 @@ import 'package:spotify_clone/data/models/auth/create_user_req.dart';
 import 'package:spotify_clone/presentation/auth/pages/signin.dart';
 
 import '../../../service_locator.dart';
-import '../../home/pages/home.dart';
-
+  
 class SignUpPage extends StatelessWidget {
   final TextEditingController _fullName= TextEditingController();
   final TextEditingController _email= TextEditingController();
@@ -56,16 +55,14 @@ class SignUpPage extends StatelessWidget {
                 // );
                 result.fold(
                         (l){
-                          // var snackBar=const SnackBar(content: Text('Error Occurred'),
-                          //     behavior: SnackBarBehavior.floating);
-                          // ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                          Navigator.push(context,
-                            MaterialPageRoute(builder: (BuildContext context)=>const HomePage()),
-                          );
+                          var snackBar=const SnackBar(content: Text('Error Occurred'),
+                              behavior: SnackBarBehavior.floating);
+                          ScaffoldMessenger.of(context).showSnackBar(snackBar);
+
                         },
                         (r){
                           Navigator.push(context,
-                              MaterialPageRoute(builder: (BuildContext context)=>const HomePage()),
+                              MaterialPageRoute(builder: (BuildContext context)=> SignInPage()),
                               );
                         });
               },
@@ -97,27 +94,55 @@ class SignUpPage extends StatelessWidget {
     );
   }
   Widget _emailField(BuildContext context) {
-    return TextField(
+    return TextFormField(
       controller: _email,
       decoration: const InputDecoration(
-          hintText: 'Enter Email'
+        hintText: 'Enter Email',
       ).applyDefaults(
-          Theme.of(context).inputDecorationTheme
+        Theme.of(context).inputDecorationTheme,
       ),
+      keyboardType: TextInputType.emailAddress,
+      autovalidateMode: AutovalidateMode.onUserInteraction,
+      validator: (value) {
+        const emailPattern =
+            r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$';
+        final regex = RegExp(emailPattern);
+
+        if (value == null || value.isEmpty) {
+          return 'Email is required';
+        } else if (!regex.hasMatch(value)) {
+          return 'Enter a valid email';
+        }
+        return null;
+      },
     );
   }
 
   Widget _passwordField(BuildContext context) {
-    return TextField(
+    return TextFormField(
       controller: _password,
       obscureText: true,
       decoration: const InputDecoration(
-          hintText: 'Password'
+        hintText: 'Password',
       ).applyDefaults(
-          Theme.of(context).inputDecorationTheme
+        Theme.of(context).inputDecorationTheme,
       ),
+      autovalidateMode: AutovalidateMode.onUserInteraction,
+      validator: (value) {
+        const passwordPattern =
+            r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$';
+        final regex = RegExp(passwordPattern);
+
+        if (value == null || value.isEmpty) {
+          return 'Password is required';
+        } else if (!regex.hasMatch(value)) {
+          return 'Password must be at least 8 characters, include upper and lower case letters, a number, and a special character.';
+        }
+        return null;
+      },
     );
   }
+
 
   Widget _signinText(BuildContext context){
 
