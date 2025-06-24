@@ -3,7 +3,10 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:spotify_clone/presentation/auth/pages/signup_or_signin.dart';
+import 'package:spotify_clone/presentation/home/pages/user_appointments.dart';
 import 'package:spotify_clone/presentation/song/page/song_page.dart';
+
+import 'dashboard_screen.dart';
 // import 'package:spotify_clone/presentation/choose_mode/pages/choose_mode.dart';
 // import 'package:flutter_svg/flutter_svg.dart';
 // import 'package:spotify_clone/common/helpers/is_dark_mode.dart';
@@ -28,8 +31,8 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   int _selectedIndex = 0;
   final List<Widget> _pages = [
-    const MeditationDashboard(),
-    const MeditationHomePage(),
+     const DoctorListPage(),
+     const UserAppointmentsPage(),
   ];
 
   void _onItemTapped(int index) {
@@ -50,8 +53,8 @@ class _HomePageState extends State<HomePage> {
             label: 'Dashboard',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.timer),
-            label: 'Meditate',
+            icon: Icon(Icons.receipt_long),
+            label: 'Appointments',
           ),
         ],
         currentIndex: _selectedIndex,

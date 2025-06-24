@@ -6,6 +6,7 @@ import 'package:spotify_clone/core/config/assets/app_vectors.dart';
 import 'package:spotify_clone/data/models/auth/signin_user_req.dart';
 import 'package:spotify_clone/domain/usecases/auth/signin.dart';
 import 'package:spotify_clone/presentation/auth/pages/sign_up.dart';
+import 'package:spotify_clone/presentation/home/pages/admin_home.dart';
 
 import '../../../service_locator.dart';
 import '../../home/pages/home.dart';
@@ -15,6 +16,8 @@ class SignInPage extends StatelessWidget {
 
   final TextEditingController _email =TextEditingController();
   final TextEditingController _password =TextEditingController();
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
 
   @override
   Widget build(BuildContext context) {
@@ -38,6 +41,8 @@ class SignInPage extends StatelessWidget {
               _emailField(context),
               const SizedBox(height: 15,),
               _passwordField(context),
+              const SizedBox(height: 15,),
+              _loginButton(context),
               BasicAppButton(onPressed: () async{
                 var result = await sl<SignInUseCase>().call(
                 params: SigninUserReq.signInUserReq(
@@ -92,6 +97,23 @@ class SignInPage extends StatelessWidget {
       ).applyDefaults(
           Theme.of(context).inputDecorationTheme
       ),
+    );
+  }
+
+  Widget _loginButton(BuildContext context) {
+    return ElevatedButton(
+      onPressed: () {
+        if (_formKey.currentState!.validate()) {
+          if (_email.text == 'admin@niramaya.com' &&
+              _password.text == 'niramaya') {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const AdminHome()),
+            );
+          }
+        }
+      },
+      child: const Text('Login'),
     );
   }
 

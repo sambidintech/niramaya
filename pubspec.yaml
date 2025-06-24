@@ -44,7 +44,9 @@ dependencies:
   get_it: ^7.7.0
   dartz: ^0.10.1
   cloud_firestore: ^4.14.0
-
+  table_calendar: ^3.2.0
+  intl: ^0.20.2
+  flutter_secure_storage: ^9.2.4
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -84,6 +86,7 @@ flutter:
     - assets/vectors/moon.svg
     - assets/vectors/spotify_logo.svg
     - assets/vectors/sun.svg
+    - assets/doctors.json
   fonts:
     - family: Satoshi
       fonts:
