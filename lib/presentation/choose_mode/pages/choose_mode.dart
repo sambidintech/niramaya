@@ -7,7 +7,6 @@ import 'package:spotify_clone/common/widgets/button/basic_app_button.dart';
 import 'package:spotify_clone/presentation/auth/pages/signup_or_signin.dart';
 import 'package:spotify_clone/presentation/choose_mode/bloc/theme_cubit.dart';
 
-import '../../../core/config/assets/app_images.dart';
 import '../../../core/config/assets/app_vectors.dart';
 
 class ChooseModePage extends StatelessWidget {

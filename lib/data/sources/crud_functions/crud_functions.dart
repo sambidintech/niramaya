@@ -112,7 +112,7 @@ Future<void> uploadPatientAppointmentData({
 }) async {
   final CollectionReference appointmentCollection =
   FirebaseFirestore.instance.collection('patient-apt-data');
-  final storage = FlutterSecureStorage();
+  const storage = FlutterSecureStorage();
   final String? userId = await storage.read(key: 'user_uid');
 
   if (userId == null) {
@@ -167,7 +167,7 @@ Future<Map<String, dynamic>?> getPatientAppointmentData() async {
   final CollectionReference appointmentCollection =
   FirebaseFirestore.instance.collection('patient-apt-data');
 
-  final storage = FlutterSecureStorage();
+  const storage = FlutterSecureStorage();
   final String? userId = await storage.read(key: 'user_uid');
 
   if (userId == null) {

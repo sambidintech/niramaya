@@ -5,6 +5,8 @@ import '../../../main.dart';
 import '../../auth/pages/signup_or_signin.dart';
 
 class UserAppointmentsPage extends StatefulWidget {
+  const UserAppointmentsPage({super.key});
+
   @override
   _UserAppointmentsPageState createState() => _UserAppointmentsPageState();
 }
@@ -38,7 +40,7 @@ class _UserAppointmentsPageState extends State<UserAppointmentsPage> with RouteA
 
   Future<void> fetchAppointmentsFromFirestore() async {
     setState(() => isLoading = true);
-    final storage = FlutterSecureStorage();
+    const storage = FlutterSecureStorage();
     final String? userId = await storage.read(key: 'user_uid');
 
     try {
@@ -108,7 +110,7 @@ class _UserAppointmentsPageState extends State<UserAppointmentsPage> with RouteA
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xFFF6F6F6),
+      backgroundColor: const Color(0xFFF6F6F6),
       drawer: Drawer(
         elevation: 0,
         child: ListView(
@@ -129,7 +131,7 @@ class _UserAppointmentsPageState extends State<UserAppointmentsPage> with RouteA
         backgroundColor: Colors.white,
         elevation: 0,
         centerTitle: true,
-        title: Text(
+        title: const Text(
           'Your Appointments',
           style: TextStyle(
             color: Colors.black,
@@ -139,17 +141,17 @@ class _UserAppointmentsPageState extends State<UserAppointmentsPage> with RouteA
         ),
       ),
       body: isLoading
-          ? Center(child: CircularProgressIndicator())
+          ? const Center(child: CircularProgressIndicator())
           : appointments.isEmpty
-          ? Center(child: Text("No Appointments Found"))
+          ? const Center(child: Text("No Appointments Found"))
           : ListView.builder(
-        padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         itemCount: appointments.length,
         itemBuilder: (context, index) {
           final appointment = appointments[index];
           print(appointment);
           return Container(
-            margin: EdgeInsets.only(bottom: 12),
+            margin: const EdgeInsets.only(bottom: 12),
             decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.circular(12),
@@ -157,12 +159,12 @@ class _UserAppointmentsPageState extends State<UserAppointmentsPage> with RouteA
                 BoxShadow(
                   color: Colors.black.withOpacity(0.05),
                   blurRadius: 4,
-                  offset: Offset(0, 2),
+                  offset: const Offset(0, 2),
                 ),
               ],
             ),
             child: Padding(
-              padding: EdgeInsets.all(12),
+              padding: const EdgeInsets.all(12),
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
@@ -183,36 +185,36 @@ class _UserAppointmentsPageState extends State<UserAppointmentsPage> with RouteA
                       },
                     ),
                   ),
-                  SizedBox(width: 12),
+                  const SizedBox(width: 12),
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
                           appointment['name'] ?? '',
-                          style: TextStyle(
+                          style: const TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.w600,
                             color: Colors.black,
                           ),
                         ),
-                        SizedBox(height: 4),
+                        const SizedBox(height: 4),
                         Text(
                           appointment['experience'] ?? '',
-                          style: TextStyle(
+                          style: const TextStyle(
                             fontSize: 12,
                             color: Colors.black87,
                           ),
                         ),
-                        SizedBox(height: 4),
+                        const SizedBox(height: 4),
                         Text(
                           appointment['qualification'] ?? '',
-                          style: TextStyle(
+                          style: const TextStyle(
                             fontSize: 12,
                             color: Colors.black54,
                           ),
                         ),
-                        SizedBox(height: 12),
+                        const SizedBox(height: 12),
                         Text(
                           "Date: ${appointment['appointment_date'] ?? ''}",
                           style: TextStyle(
@@ -221,7 +223,7 @@ class _UserAppointmentsPageState extends State<UserAppointmentsPage> with RouteA
                             color: Colors.blue[800],
                           ),
                         ),
-                        SizedBox(height: 4),
+                        const SizedBox(height: 4),
                         Text(
                           "Time: ${appointment['appointment_time'] ?? ''}",
                           style: TextStyle(
@@ -230,8 +232,8 @@ class _UserAppointmentsPageState extends State<UserAppointmentsPage> with RouteA
                             color: Colors.blue[800],
                           ),
                         ),
-                        SizedBox(height: 16),
-                        Container(
+                        const SizedBox(height: 16),
+                        SizedBox(
 
                           width: 130,
                           height: 32,
@@ -249,7 +251,7 @@ class _UserAppointmentsPageState extends State<UserAppointmentsPage> with RouteA
                                 borderRadius: BorderRadius.circular(8),
                               ),
                             ),
-                            child: Text(
+                            child: const Text(
                               'Delete',
                               style: TextStyle(
                                 fontSize: 12,

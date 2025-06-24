@@ -5,6 +5,8 @@ import '../../../main.dart';
 import '../../auth/pages/signup_or_signin.dart'; // Make sure routeObserver is accessible
 
 class DoctorListPage extends StatefulWidget {
+  const DoctorListPage({super.key});
+
   @override
   _DoctorListPageState createState() => _DoctorListPageState();
 }
@@ -43,7 +45,7 @@ class _DoctorListPageState extends State<DoctorListPage> with RouteAware {
       final snapshot =
       await FirebaseFirestore.instance.collection('doctor-data').get();
 
-      final fetchedDoctors = snapshot.docs.map((doc) {
+      final  fetchedDoctors = snapshot.docs.map((doc) {
         final data = doc.data();
         data['id'] = doc.id;
         data.remove('rating'); // Optional
@@ -63,7 +65,7 @@ class _DoctorListPageState extends State<DoctorListPage> with RouteAware {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xFFF6F6F6),
+      backgroundColor: const Color(0xFFF6F6F6),
       drawer: Drawer(
         elevation: 0,
         child: ListView(
@@ -85,7 +87,7 @@ class _DoctorListPageState extends State<DoctorListPage> with RouteAware {
         elevation: 0,
 
         centerTitle: true,
-        title: Text(
+        title: const Text(
           'Famous doctors for you',
           style: TextStyle(
             color: Colors.black,
@@ -95,14 +97,14 @@ class _DoctorListPageState extends State<DoctorListPage> with RouteAware {
         ),
       ),
       body: isLoading
-          ? Center(child: CircularProgressIndicator())
+          ? const Center(child: CircularProgressIndicator())
           : ListView.builder(
-        padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         itemCount: doctors.length,
         itemBuilder: (context, index) {
           final doctor = doctors[index];
           return Container(
-            margin: EdgeInsets.only(bottom: 12),
+            margin: const EdgeInsets.only(bottom: 12),
             decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.circular(12),
@@ -110,12 +112,12 @@ class _DoctorListPageState extends State<DoctorListPage> with RouteAware {
                 BoxShadow(
                   color: Colors.black.withOpacity(0.05),
                   blurRadius: 4,
-                  offset: Offset(0, 2),
+                  offset: const Offset(0, 2),
                 ),
               ],
             ),
             child: Padding(
-              padding: EdgeInsets.all(12),
+              padding: const EdgeInsets.all(12),
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
@@ -137,24 +139,24 @@ class _DoctorListPageState extends State<DoctorListPage> with RouteAware {
                       },
                     ),
                   ),
-                  SizedBox(width: 12),
+                  const SizedBox(width: 12),
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
                           doctor['name'],
-                          style: TextStyle(
+                          style: const TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.w600,
                             color: Colors.black,
                           ),
                         ),
-                        SizedBox(height: 4),
+                        const SizedBox(height: 4),
                         Row(
                           children: [
                             Container(
-                              padding: EdgeInsets.symmetric(
+                              padding: const EdgeInsets.symmetric(
                                   horizontal: 6, vertical: 2),
                               decoration: BoxDecoration(
                                 color: Colors.blue[50],
@@ -162,15 +164,15 @@ class _DoctorListPageState extends State<DoctorListPage> with RouteAware {
                               ),
                               child: Row(
                                 children: [
-                                  Icon(
+                                  const Icon(
                                     Icons.star,
                                     color: Colors.blue,
                                     size: 14,
                                   ),
-                                  SizedBox(width: 4),
+                                  const SizedBox(width: 4),
                                   Text(
                                     "${doctor['status'].toUpperCase()}",
-                                    style: TextStyle(
+                                    style: const TextStyle(
                                       fontSize: 11,
                                       fontWeight: FontWeight.w500,
                                       color: Colors.blue,
@@ -179,9 +181,9 @@ class _DoctorListPageState extends State<DoctorListPage> with RouteAware {
                                 ],
                               ),
                             ),
-                            SizedBox(width: 15),
+                            const SizedBox(width: 15),
                             Container(
-                              padding: EdgeInsets.symmetric(
+                              padding: const EdgeInsets.symmetric(
                                   horizontal: 6, vertical: 2),
                               decoration: BoxDecoration(
                                 color: Colors.blue[50],
@@ -189,15 +191,15 @@ class _DoctorListPageState extends State<DoctorListPage> with RouteAware {
                               ),
                               child: Row(
                                 children: [
-                                  Icon(
+                                  const Icon(
                                     Icons.work,
                                     color: Colors.blue,
                                     size: 14,
                                   ),
-                                  SizedBox(width: 4),
+                                  const SizedBox(width: 4),
                                   Text(
                                     doctor['experience'],
-                                    style: TextStyle(
+                                    style: const TextStyle(
                                       fontSize: 11,
                                       fontWeight: FontWeight.w500,
                                       color: Colors.blue,
@@ -208,20 +210,20 @@ class _DoctorListPageState extends State<DoctorListPage> with RouteAware {
                             ),
                           ],
                         ),
-                        SizedBox(height: 20),
+                        const SizedBox(height: 20),
                         Row(
                           children: [
                             Expanded(
                               child: Text(
                                 "Total cost: ${doctor['cost']}",
-                                style: TextStyle(
+                                style: const TextStyle(
                                   fontSize: 12,
                                   fontWeight: FontWeight.w500,
                                   color: Color(0xFF007BFF),
                                 ),
                               ),
                             ),
-                            Container(
+                            SizedBox(
                               width: 95,
                               height: 32,
                               child: ElevatedButton(
@@ -246,7 +248,7 @@ class _DoctorListPageState extends State<DoctorListPage> with RouteAware {
                                   backgroundColor: doctor['status']
                                       .toUpperCase() ==
                                       "ONLINE"
-                                      ? Color(0xFF007BFF)
+                                      ? const Color(0xFF007BFF)
                                       : Colors.grey.withOpacity(0.5),
                                   foregroundColor: Colors.white,
                                   elevation: 0,
@@ -256,7 +258,7 @@ class _DoctorListPageState extends State<DoctorListPage> with RouteAware {
                                   ),
                                   padding: EdgeInsets.zero,
                                 ),
-                                child: Text(
+                                child: const Text(
                                   'Appointment',
                                   style: TextStyle(
                                     fontSize: 12,
