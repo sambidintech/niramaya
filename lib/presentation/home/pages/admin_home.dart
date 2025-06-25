@@ -305,10 +305,10 @@ class _AdminHomeState extends State<AdminHome> {
       };
 
       // Save to Firestore
-      await FirebaseFirestore.instance
+      final docRef = await FirebaseFirestore.instance
           .collection('doctor-data')
           .add(doctorData);
-
+      await docRef.update({'id': docRef.id});
       _showSnackBar('Doctor added successfully!');
       _resetForm();
     } catch (e) {
